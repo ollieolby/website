@@ -11,8 +11,8 @@ layout: layouts/page.liquid
     front door to webapps that live in their own repositories.
   </p>
   <div class="hero-actions">
-    <a class="button" href="{{ site.basePath }}/blog/">Read the blog</a>
-    <a class="button button-secondary" href="{{ site.basePath }}/apps/">Browse apps</a>
+    <a class="button" href="{{ site.base_path }}/blog/">Read the blog</a>
+    <a class="button button-secondary" href="{{ site.base_path }}/apps/">Browse apps</a>
   </div>
 </section>
 
@@ -21,7 +21,7 @@ layout: layouts/page.liquid
     <p class="eyebrow">Latest post</p>
     {% assign latest_post = collections.posts | first %}
     {% if latest_post %}
-      <h2><a href="{{ site.basePath }}{{ latest_post.url }}">{{ latest_post.data.title }}</a></h2>
+      <h2><a href="{{ site.base_path }}{{ latest_post.url }}">{{ latest_post.data.title }}</a></h2>
       <p>{{ latest_post.data.excerpt | strip_html | truncate: 140 }}</p>
     {% else %}
       <h2>No posts yet</h2>

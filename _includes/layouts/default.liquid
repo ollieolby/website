@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% if title %}{{ title }} | {% endif %}{{ site.title }}</title>
     <meta name="description" content="{{ description | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
-    <link rel="stylesheet" href="{{ site.basePath }}/assets/css/site.css">
+    <link rel="stylesheet" href="{{ site.base_path }}/assets/css/site.css">
   </head>
   <body>
     <div class="site-shell">
       <header class="site-header">
-        <a class="brand" href="{{ site.basePath }}/">{{ site.title }}</a>
+        <a class="brand" href="{{ site.base_path }}/">{{ site.title }}</a>
         <nav class="site-nav" aria-label="Primary">
-          <a href="{{ site.basePath }}/">Home</a>
-          <a href="{{ site.basePath }}/blog/">Blog</a>
-          <a href="{{ site.basePath }}/apps/">Apps</a>
+          <a href="{{ site.base_path }}/">Home</a>
+          <a href="{{ site.base_path }}/blog/">Blog</a>
+          <a href="{{ site.base_path }}/apps/">Apps</a>
         </nav>
       </header>
 
