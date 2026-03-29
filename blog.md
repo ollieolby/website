@@ -1,19 +1,20 @@
 ---
 title: Blog
 permalink: /blog/
+layout: layouts/page.liquid
 ---
 
 # Blog
 
 Markdown posts live in `_posts/` and appear here automatically.
 
-{% if site.posts.size > 0 %}
+{% if collections.posts.size > 0 %}
 <div class="stack">
-  {% for post in site.posts %}
+  {% for post in collections.posts %}
     <article class="card">
       <p class="post-meta">{{ post.date | date: "%-d %B %Y" }}</p>
-      <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-      <p>{{ post.excerpt | strip_html | truncate: 180 }}</p>
+      <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+      <p>{{ post.data.excerpt | strip_html | truncate: 180 }}</p>
     </article>
   {% endfor %}
 </div>

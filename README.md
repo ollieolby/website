@@ -1,46 +1,60 @@
 # Personal website
 
-A simple GitHub Pages-friendly site with:
+A simple personal site built with Eleventy and deployed to GitHub Pages with GitHub Actions.
 
-- a homepage
-- a markdown blog
-- an `/apps/` area for small webapps
+This repo is the main website only. It handles:
+
+- the homepage
+- the markdown blog
+- the apps directory page
+
+Each app should live in its own GitHub repo and deploy separately with its own GitHub Pages site.
 
 ## Local structure
 
 - `_posts/` holds blog posts written in Markdown
-- `apps/` holds standalone app pages
-- `assets/css/` holds shared styles
-- `_layouts/` holds the site templates
+- `_includes/layouts/` holds shared Eleventy layouts
+- `_data/site.json` holds site metadata
+- `assets/css/` holds shared site styles
+- `apps.md` is the directory page for external apps
 
 ## Run locally
 
-If you have Ruby installed:
+This project uses a Node workflow:
 
 ```bash
-bundle install
-bundle exec jekyll serve
+npm install
+npm run dev
 ```
 
-Then open the local address Jekyll prints, usually `http://127.0.0.1:4000`.
+Eleventy will start a local dev server, usually at `http://localhost:8080`.
+
+## Build for production
+
+```bash
+npm run build
+```
+
+The generated site is written to `_site/`.
 
 ## Publish on GitHub Pages
 
-1. Create a GitHub repo from this folder.
-2. Push the code to the default branch.
-3. In GitHub, open `Settings` -> `Pages`.
-4. Under `Build and deployment`, choose `Deploy from a branch`.
-5. Select your default branch and the `/(root)` folder.
+This repo includes a GitHub Actions workflow at `.github/workflows/deploy.yml`.
 
-Because this project uses Jekyll in the standard GitHub Pages format, GitHub Pages will build it automatically.
+To enable deployment:
+
+1. Push this repo to GitHub.
+2. In GitHub, open `Settings` -> `Pages`.
+3. Set `Source` to `GitHub Actions`.
+4. Push to `main` to trigger deployment.
 
 ## Move to a custom domain later
 
 When you're ready:
 
-1. Add a file named `CNAME` in the repo root containing your domain, for example `www.yourdomain.com`.
-2. Update your DNS records at your domain provider.
-3. Re-save the custom domain in GitHub Pages settings if needed.
+1. Add a `CNAME` file to the repo root containing your domain, for example `www.yourdomain.com`.
+2. Update your DNS records with your domain provider.
+3. Set the custom domain in GitHub Pages settings.
 
 ## Add content
 
@@ -52,20 +66,24 @@ Create a file in `_posts/` named like:
 2026-03-29-my-post-title.md
 ```
 
-### New app
+Use front matter like:
 
-Create a new page inside `apps/`, for example:
-
-```text
-apps/my-tool.html
+```md
+---
+title: My post title
+excerpt: A short summary for listings and metadata.
+layout: layouts/post.liquid
+permalink: /blog/my-post-title/
+---
 ```
 
-Use front matter at the top so Jekyll applies the site layout:
+### Add a new app entry
 
-```html
----
-layout: page
-title: My Tool
-permalink: /apps/my-tool/
----
+Update `apps.md` with:
+
+```md
+- app name
+- short description
+- link to the live GitHub Pages deployment
+- optional link to the source repo
 ```

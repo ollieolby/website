@@ -73,8 +73,7 @@ a {
 
 .hero,
 .card,
-.post,
-.timer-card {
+.post {
   background: color-mix(in srgb, var(--panel) 92%, white 8%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -82,8 +81,7 @@ a {
 }
 
 .hero,
-.post,
-.timer-card {
+.post {
   padding: clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -127,8 +125,7 @@ h2 {
 
 .hero-copy,
 .post-meta,
-.site-footer,
-.timer-label {
+.site-footer {
   color: var(--muted);
 }
 
@@ -170,21 +167,6 @@ h2 {
 
 .post-body > * + * {
   margin-top: 1rem;
-}
-
-.app-shell {
-  max-width: 42rem;
-}
-
-.timer-card {
-  max-width: 28rem;
-  margin-top: 1.5rem;
-}
-
-.timer-label {
-  margin: 0;
-  font-size: clamp(3rem, 10vw, 4.5rem);
-  font-variant-numeric: tabular-nums;
 }
 
 code {
