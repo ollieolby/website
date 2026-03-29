@@ -13,7 +13,7 @@ Markdown posts live in `_posts/` and appear here automatically.
   {% for post in collections.posts %}
     <article class="card">
       <p class="post-meta">{{ post.date | date: "%-d %B %Y" }}</p>
-      <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+      <h2><a href="{{ site.basePath }}{{ post.url }}">{{ post.data.title }}</a></h2>
       <p>{{ post.data.excerpt | strip_html | truncate: 180 }}</p>
     </article>
   {% endfor %}

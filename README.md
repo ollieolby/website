@@ -29,6 +29,8 @@ npm run dev
 
 Eleventy will start a local dev server, usually at `http://localhost:8080`.
 
+Local development uses the root path `/`, while the GitHub Pages workflow injects the correct repository base path during deployment.
+
 ## Build for production
 
 ```bash
