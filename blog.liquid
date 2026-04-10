@@ -1,0 +1,24 @@
+---
+title: Blog
+permalink: /blog/
+layout: layouts/page.liquid
+---
+
+<section class="stack">
+  <div>
+    <h1>Blog</h1>
+    <p>Markdown posts live in <code>_posts/</code> and appear here automatically.</p>
+  </div>
+
+  {% if collections.posts.size > 0 %}
+    {% for post in collections.posts %}
+      <article class="card">
+        <p class="post-meta">{{ post.date | date: "%-d %B %Y" }}</p>
+        <h2><a href="{{ site.base_path }}{{ post.url }}">{{ post.data.title }}</a></h2>
+        <p>{{ post.data.excerpt | strip_html | truncate: 180 }}</p>
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No posts yet.</p>
+  {% endif %}
+</section>

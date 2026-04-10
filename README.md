@@ -14,9 +14,9 @@ Each app should live in its own GitHub repo and deploy separately with its own G
 
 - `_posts/` holds blog posts written in Markdown
 - `_includes/layouts/` holds shared Eleventy layouts
-- `_data/site.json` holds site metadata
+- `_data/site.js` holds site metadata
 - `assets/css/` holds shared site styles
-- `apps.md` is the directory page for external apps
+- `apps.liquid` is the directory page for external apps
 
 ## Run locally
 
@@ -81,7 +81,7 @@ permalink: /blog/my-post-title/
 
 ### Add a new app entry
 
-Update `apps.md` with:
+Update `apps.liquid` with:
 
 ```md
 - app name
