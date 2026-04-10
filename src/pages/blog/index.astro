@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout title="Blog | Ollie Olby" description="Blog posts and project notes by Ollie Olby.">
+  <section class="section-intro container">
+    <p class="eyebrow">Blog</p>
+    <h1>Writing</h1>
+    <p class="lede">
+      Notes on projects, code, and the things I end up building to make daily life a little
+      easier.
+    </p>
+  </section>
+
+  <section class="container listing">
+    {posts.map((post) => {
+      const formattedDate = post.data.date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+      return (
+        <a class="listing-card" href={`${base}/blog/${post.id}/`}>
+          <time class="listing-meta" datetime={post.data.date.toISOString()}>{formattedDate}</time>
+          <h2>{post.data.title}</h2>
+          <p>{post.data.description}</p>
+          <span class="listing-meta">{post.data.author}</span>
+        </a>
+      );
+    })}
+  </section>
+</BaseLayout>

@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const latestPost = posts[0];
+const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="Ollie Olby"
+  description="Personal website, blog posts, and links to standalone apps by Ollie Olby."
+>
+  <section class="hero container">
+    <div class="hero-copy">
+      <p class="eyebrow">Personal website</p>
+      <h1>Writing, experiments, and small software projects.</h1>
+      <p class="lede">
+        A simple home for essays, build notes, and links out to standalone web apps that
+        live in their own repositories.
+      </p>
+      <div class="hero-actions">
+        <a class="button" href={`${base}/blog/`}>Read the blog</a>
+        <a class="button button-secondary" href={`${base}/apps/`}>Browse apps</a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <p class="eyebrow">Latest post</p>
+      {
+        latestPost ? (
+          <>
+            <h2>
+              <a href={`${base}/blog/${latestPost.id}/`}>{latestPost.data.title}</a>
+            </h2>
+            <p>{latestPost.data.description}</p>
+          </>
+        ) : (
+          <>
+            <h2>No posts yet</h2>
+            <p>Add a markdown file in <code>src/content/blog/</code> to publish the first one.</p>
+          </>
+        )
+      }
+    </aside>
+  </section>
+
+  <section class="container home-grid">
+    <article class="feature-card">
+      <p class="eyebrow">Blog</p>
+      <h2>Markdown-first publishing.</h2>
+      <p>
+        Posts are written in plain markdown and rendered into a proper article layout with
+        metadata, readable typography, and a clean index page.
+      </p>
+    </article>
+
+    <article class="feature-card">
+      <p class="eyebrow">Apps</p>
+      <h2>A hub for separate app repos.</h2>
+      <p>
+        Each app can keep its own repository and deployment, while this site stays the main
+        front door that ties everything together.
+      </p>
+    </article>
+  </section>
+</BaseLayout>

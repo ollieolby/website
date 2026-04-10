@@ -1,6 +1,6 @@
 # Personal website
 
-A simple personal site built with Eleventy and deployed to GitHub Pages with GitHub Actions.
+A simple personal site built with Astro and deployed to GitHub Pages with GitHub Actions.
 
 This repo is the main website only. It handles:
 
@@ -12,24 +12,20 @@ Each app should live in its own GitHub repo and deploy separately with its own G
 
 ## Local structure
 
-- `_posts/` holds blog posts written in Markdown
-- `_includes/layouts/` holds shared Eleventy layouts
-- `_data/site.js` holds site metadata
-- `assets/css/` holds shared site styles
-- `apps.liquid` is the directory page for external apps
+- `src/content/blog/` holds markdown blog posts
+- `src/layouts/` holds the shared Astro layouts
+- `src/pages/` holds the website pages
+- `src/styles/global.css` holds the site styling
+- `src/pages/apps.astro` is the directory page for external apps
 
 ## Run locally
-
-This project uses a Node workflow:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Eleventy will start a local dev server, usually at `http://localhost:8080`.
-
-Local development uses the root path `/`, while the GitHub Pages workflow injects the correct repository base path during deployment.
+Astro will usually start at `http://localhost:4321`.
 
 ## Build for production
 
@@ -37,7 +33,7 @@ Local development uses the root path `/`, while the GitHub Pages workflow inject
 npm run build
 ```
 
-The generated site is written to `_site/`.
+The generated site is written to `dist/`.
 
 ## Publish on GitHub Pages
 
@@ -62,10 +58,10 @@ When you're ready:
 
 ### New blog post
 
-Create a file in `_posts/` named like:
+Create a file in `src/content/blog/` named like:
 
 ```text
-2026-03-29-my-post-title.md
+my-post-title.md
 ```
 
 Use front matter like:
@@ -73,19 +69,13 @@ Use front matter like:
 ```md
 ---
 title: My post title
-excerpt: A short summary for listings and metadata.
-layout: layouts/post.liquid
-permalink: /blog/my-post-title/
+description: A short summary for listings and metadata.
+date: 2026-04-10
+author: Ollie Olby
+tags: ["tag-one", "tag-two"]
 ---
 ```
 
 ### Add a new app entry
 
-Update `apps.liquid` with:
-
-```md
-- app name
-- short description
-- link to the live GitHub Pages deployment
-- optional link to the source repo
-```
+Update the `apps` array in `src/pages/apps.astro` with the new app name, description, and live URL.
