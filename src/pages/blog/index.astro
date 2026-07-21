@@ -11,11 +11,9 @@ const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.re
 
 <BaseLayout title="Blog | Ollie Olby" description="Blog posts and project notes by Ollie Olby.">
   <section class="section-intro container">
-    <p class="eyebrow">Blog</p>
     <h1>Writing</h1>
     <p class="lede">
-      Notes on projects, code, and the things I end up building to make daily life a little
-      easier.
+      Notes on design, code, and the small systems I build for myself.
     </p>
   </section>
 
@@ -29,10 +27,12 @@ const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.re
 
       return (
         <a class="listing-card" href={`${base}/blog/${post.id}/`}>
-          <time class="listing-meta" datetime={post.data.date.toISOString()}>{formattedDate}</time>
+          <div class="listing-topline">
+            <time class="listing-meta" datetime={post.data.date.toISOString()}>{formattedDate}</time>
+            <span class="listing-meta">{post.data.author}</span>
+          </div>
           <h2>{post.data.title}</h2>
           <p>{post.data.description}</p>
-          <span class="listing-meta">{post.data.author}</span>
         </a>
       );
     })}

@@ -2,6 +2,8 @@
 
 A simple personal site built with Astro and deployed to GitHub Pages with GitHub Actions.
 
+Live site: [https://ollieolby.github.io/website/](https://ollieolby.github.io/website/)
+
 This repo is the main website only. It handles:
 
 - the homepage

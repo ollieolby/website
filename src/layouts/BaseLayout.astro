@@ -28,21 +28,16 @@ const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.re
   <body>
     <div class="page-shell">
       <header class="site-header">
-        <nav class="container nav">
+        <div class="container header-row">
           <a class="brand" href={`${base}/`}>
-            <span class="brand-mark">OO</span>
-            <span class="brand-copy">
-              <strong>Ollie Olby</strong>
-              <span>writing and products</span>
-            </span>
+            Ollie Olby
           </a>
 
-          <div class="nav-links">
-            <a href={`${base}/`}>Home</a>
+          <nav class="nav-panel" aria-label="Primary">
             <a href={`${base}/blog/`}>Blog</a>
             <a href={`${base}/apps/`}>Apps</a>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </header>
 
       <main>
@@ -51,8 +46,7 @@ const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.re
 
       <footer class="site-footer">
         <div class="container footer-inner">
-          <p>Personal site for notes, projects, and software experiments.</p>
-          <p>Built with Astro and markdown.</p>
+          <p>Minimal site for writing and software projects.</p>
         </div>
       </footer>
     </div>
