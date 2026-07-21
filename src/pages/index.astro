@@ -8,28 +8,28 @@ const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.re
   title="Ollie Olby"
   description="Personal website, blog posts, and links to standalone apps by Ollie Olby."
 >
-  <section class="home-blank container" aria-label="Homepage">
+  <section class="home-blank container" aria-label="Homepage" data-home-hero>
     <div class="home-sketch" aria-hidden="true">
       <svg viewBox="0 0 1200 760" role="presentation">
         <g class="sketch sketch-one">
-          <path d="M108 474C197 441 262 403 344 335C418 274 498 215 601 177" />
-          <path d="M471 126L596 176L535 293" />
+          <polyline points="96,488 196,488 276,408 352,408 430,330 520,330 596,254" />
+          <polyline points="470,176 550,176 596,222 644,174" />
           <circle cx="344" cy="335" r="11" />
           <circle cx="596" cy="176" r="11" />
         </g>
         <g class="sketch sketch-two">
-          <path d="M719 554C803 466 871 386 940 273C978 211 1004 165 1048 106" />
-          <path d="M764 603L714 553L775 501" />
+          <polyline points="734,576 804,506 876,506 952,430 952,346 1034,264" />
+          <polyline points="712,576 760,528 810,578" />
           <circle cx="940" cy="273" r="10" />
         </g>
         <g class="sketch sketch-three">
-          <path d="M368 618H552C642 618 719 592 780 546C836 504 879 450 909 382" />
-          <path d="M536 560L552 618L494 633" />
+          <polyline points="342,620 506,620 584,542 662,542 736,468 818,468 900,386" />
+          <polyline points="504,566 560,622 504,678" />
           <circle cx="780" cy="546" r="9" />
         </g>
         <g class="sketch sketch-four">
-          <path d="M170 157H262L315 231H416" />
-          <path d="M262 157L262 231" />
+          <polyline points="166,160 258,160 258,240 336,240 414,162 492,162" />
+          <polyline points="258,120 258,198 336,120" />
           <circle cx="170" cy="157" r="8" />
           <circle cx="416" cy="231" r="8" />
         </g>
@@ -54,3 +54,29 @@ const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.re
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const hero = document.querySelector("[data-home-hero]");
+
+  if (hero instanceof HTMLElement) {
+    const resetPointer = () => {
+      hero.style.setProperty("--pointer-x", "0");
+      hero.style.setProperty("--pointer-y", "0");
+      hero.style.setProperty("--pointer-glow", "0.16");
+    };
+
+    resetPointer();
+
+    hero.addEventListener("pointermove", (event) => {
+      const bounds = hero.getBoundingClientRect();
+      const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+      const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+
+      hero.style.setProperty("--pointer-x", x.toFixed(3));
+      hero.style.setProperty("--pointer-y", y.toFixed(3));
+      hero.style.setProperty("--pointer-glow", "0.28");
+    });
+
+    hero.addEventListener("pointerleave", resetPointer);
+  }
+</script>

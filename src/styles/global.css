@@ -115,6 +115,9 @@ main {
 }
 
 .home-blank {
+  --pointer-x: 0;
+  --pointer-y: 0;
+  --pointer-glow: 0.16;
   position: relative;
   min-height: calc(100vh - 5.5rem);
   display: grid;
@@ -128,9 +131,11 @@ main {
 
 .home-sketch {
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto 0;
+  height: min(34rem, 72vh);
   pointer-events: none;
-  opacity: 0.7;
+  opacity: 0.78;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.72) 70%, transparent 100%);
 }
 
 .home-sketch svg {
@@ -140,10 +145,11 @@ main {
 
 .sketch {
   fill: none;
-  stroke: rgba(17, 17, 17, 0.15);
+  stroke: rgba(17, 17, 17, 0.14);
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 1.4;
+  transition: transform 280ms ease-out, opacity 280ms ease-out;
 }
 
 .sketch circle {
@@ -151,19 +157,27 @@ main {
 }
 
 .sketch-one {
-  animation: sketchFloatOne 18s ease-in-out infinite;
+  opacity: calc(0.14 + var(--pointer-glow) * 0.6);
+  transform: translate3d(calc(var(--pointer-x) * 12px), calc(var(--pointer-y) * 9px), 0);
+  animation: sketchPulseOne 18s ease-in-out infinite;
 }
 
 .sketch-two {
-  animation: sketchFloatTwo 22s ease-in-out infinite;
+  opacity: calc(0.12 + var(--pointer-glow) * 0.5);
+  transform: translate3d(calc(var(--pointer-x) * -10px), calc(var(--pointer-y) * 12px), 0);
+  animation: sketchPulseTwo 22s ease-in-out infinite;
 }
 
 .sketch-three {
-  animation: sketchFloatThree 20s ease-in-out infinite;
+  opacity: calc(0.11 + var(--pointer-glow) * 0.44);
+  transform: translate3d(calc(var(--pointer-x) * 9px), calc(var(--pointer-y) * -8px), 0);
+  animation: sketchPulseThree 20s ease-in-out infinite;
 }
 
 .sketch-four {
-  animation: sketchFloatFour 16s ease-in-out infinite;
+  opacity: calc(0.1 + var(--pointer-glow) * 0.4);
+  transform: translate3d(calc(var(--pointer-x) * -7px), calc(var(--pointer-y) * -6px), 0);
+  animation: sketchPulseFour 16s ease-in-out infinite;
 }
 
 .home-copy,
@@ -465,47 +479,39 @@ h1 {
   overflow: hidden;
 }
 
-@keyframes sketchFloatOne {
+@keyframes sketchPulseOne {
   0%, 100% {
-    opacity: 0.2;
-    transform: translate3d(0, 0, 0);
+    stroke-opacity: 0.72;
   }
   50% {
-    opacity: 0.52;
-    transform: translate3d(8px, -10px, 0);
+    stroke-opacity: 1;
   }
 }
 
-@keyframes sketchFloatTwo {
+@keyframes sketchPulseTwo {
   0%, 100% {
-    opacity: 0.16;
-    transform: translate3d(0, 0, 0);
+    stroke-opacity: 0.62;
   }
   50% {
-    opacity: 0.38;
-    transform: translate3d(-10px, 10px, 0);
+    stroke-opacity: 0.92;
   }
 }
 
-@keyframes sketchFloatThree {
+@keyframes sketchPulseThree {
   0%, 100% {
-    opacity: 0.14;
-    transform: translate3d(0, 0, 0);
+    stroke-opacity: 0.58;
   }
   50% {
-    opacity: 0.32;
-    transform: translate3d(10px, -6px, 0);
+    stroke-opacity: 0.9;
   }
 }
 
-@keyframes sketchFloatFour {
+@keyframes sketchPulseFour {
   0%, 100% {
-    opacity: 0.1;
-    transform: translate3d(0, 0, 0);
+    stroke-opacity: 0.54;
   }
   50% {
-    opacity: 0.28;
-    transform: translate3d(-4px, 8px, 0);
+    stroke-opacity: 0.84;
   }
 }
 

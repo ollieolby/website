@@ -16,5 +16,23 @@ function getBase() {
 
 export default defineConfig({
   site: "https://ollieolby.github.io",
-  base: getBase()
+  base: getBase(),
+  vite: {
+    server: {
+      watch: {
+        ignored: [
+          "**/.git/**",
+          "**/.astro/**",
+          "**/dist/**",
+          "**/_site/**",
+          "**/_posts/**",
+          "**/_includes/**",
+          "**/_layouts/**",
+          "**/apps/**",
+          "**/assets/**",
+          "**/.DS_Store"
+        ]
+      }
+    }
+  }
 });
