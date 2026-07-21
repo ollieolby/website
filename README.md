@@ -4,11 +4,16 @@ A simple personal site built with Astro and deployed to GitHub Pages with GitHub
 
 Live site: [https://ollieolby.github.io/website/](https://ollieolby.github.io/website/)
 
+Apps directory: [https://ollieolby.github.io/website/apps/](https://ollieolby.github.io/website/apps/)
+
+Current linked app: [https://ollieolby.github.io/anagnost-ui/](https://ollieolby.github.io/anagnost-ui/)
+
 This repo is the main website only. It handles:
 
 - the homepage
 - the markdown blog
 - the apps directory page
+- the migrated legacy blog posts from [https://www.ollieolby.co.uk](https://www.ollieolby.co.uk)
 
 Each app should live in its own GitHub repo and deploy separately with its own GitHub Pages site.
 
