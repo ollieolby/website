@@ -1,6 +1,31 @@
+import { existsSync } from "node:fs";
 import { defineConfig } from "astro/config";
 
+function hasCustomDomain() {
+  if (process.env.CUSTOM_DOMAIN === "true") {
+    return true;
+  }
+
+  return existsSync(new URL("./public/CNAME", import.meta.url));
+}
+
+function getSite() {
+  if (process.env.SITE_URL) {
+    return process.env.SITE_URL;
+  }
+
+  if (hasCustomDomain()) {
+    return "https://www.ollieolby.co.uk";
+  }
+
+  return "https://ollieolby.github.io";
+}
+
 function getBase() {
+  if (hasCustomDomain()) {
+    return "/";
+  }
+
   if (process.env.BASE_PATH) {
     return process.env.BASE_PATH;
   }
@@ -15,7 +40,7 @@ function getBase() {
 }
 
 export default defineConfig({
-  site: "https://ollieolby.github.io",
+  site: getSite(),
   base: getBase(),
   vite: {
     server: {
