@@ -16,7 +16,7 @@ const monthOptions = diaryMonths.map((month) => ({
   <section class="section-intro container diary-intro">
     <h1>Diary uploader</h1>
     <p class="lede">
-      Add one photo and one haiku, then copy the entry into the site data.
+      Add one photo and one caption, then copy the entry into the site data.
     </p>
   </section>
 
@@ -60,12 +60,12 @@ const monthOptions = diaryMonths.map((month) => ({
           </div>
 
           <div class="diary-admin-fieldset">
-            <label for="diary-caption">Haiku</label>
+            <label for="diary-caption">Caption</label>
             <textarea
               id="diary-caption"
               name="caption"
               rows="6"
-              placeholder={`line one\nline two\nline three`}
+              placeholder={`A short note, or a haiku if the day asks for one.`}
             >late bus in drizzle
 streetlights pool across the curb
 summer keeps its hush</textarea>
@@ -104,7 +104,7 @@ summer keeps its hush</p>
         <h2>How to use this from your phone</h2>
         <ol class="diary-admin-steps">
           <li>Open this page on your phone.</li>
-          <li>Pick the month, day, photo, and paste your haiku.</li>
+          <li>Pick the month, day, photo, and write your caption.</li>
           <li>Copy the suggested image path and JSON entry.</li>
           <li>Upload the image to the repo at that path, then paste the JSON into the matching month data.</li>
         </ol>
@@ -253,7 +253,7 @@ summer keeps its hush</p>
           }
 
           if (previewCaptionEl instanceof HTMLElement) {
-            previewCaptionEl.textContent = captionInput.value.trim() || "Add your haiku here.";
+            previewCaptionEl.textContent = captionInput.value.trim() || "Add your caption here.";
           }
 
           writeDraft();
