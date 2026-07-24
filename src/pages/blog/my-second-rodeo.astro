@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="My second rodeo | Ollie Olby"
+  description="A future blog section for projects that feel like a second attempt."
+>
+  <section class="section-intro container">
+    <h1>My second rodeo</h1>
+    <p class="lede">
+      Just because it's my second rodeo does not mean I know what I am doing
+    </p>
+  </section>
+
+  <section class="container listing">
+    <div class="listing-card listing-card-muted">
+      <p>Nothing here yet.</p>
+      <a class="text-link" href={`${base}/blog/random/`}>Back to Random</a>
+    </div>
+  </section>
+</BaseLayout>

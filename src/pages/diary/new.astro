@@ -1,0 +1,312 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { diaryMonths } from "../../data/photoDiary";
+
+const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
+const monthOptions = diaryMonths.map((month) => ({
+  label: `${month.month} ${month.year}`,
+  value: `${month.year}-${month.month.toLowerCase()}`
+}));
+---
+
+<BaseLayout
+  title="Diary Uploader | Ollie Olby"
+  description="A private uploader for the photo diary."
+>
+  <section class="section-intro container diary-intro">
+    <h1>Diary uploader</h1>
+    <p class="lede">
+      Add one photo and one haiku, then copy the entry into the site data.
+    </p>
+  </section>
+
+  <section class="container diary-admin-shell" data-diary-admin data-diary-password="upload">
+    <div class="diary-gate" data-diary-gate>
+      <div class="diary-gate-card">
+        <p class="diary-gate-kicker">Private</p>
+        <h2>Uploader access</h2>
+        <p>Enter the password to open the phone-friendly diary form.</p>
+        <form class="diary-gate-form" data-diary-form>
+          <label class="sr-only" for="diary-admin-password">Password</label>
+          <input id="diary-admin-password" name="password" type="password" autocomplete="current-password" placeholder="Password" />
+          <button type="submit">Enter</button>
+        </form>
+        <p class="diary-gate-error" data-diary-error hidden>That password did not work.</p>
+      </div>
+    </div>
+
+    <div class="diary-admin-content" data-diary-content hidden>
+      <div class="diary-admin-grid">
+        <form class="diary-admin-form diary-admin-card" data-entry-form>
+          <div class="diary-admin-fieldset">
+            <label for="diary-month">Month</label>
+            <select id="diary-month" name="month">
+              {monthOptions.map((option) => (
+                <option value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="diary-admin-inline">
+            <div class="diary-admin-fieldset">
+              <label for="diary-day">Day</label>
+              <input id="diary-day" name="day" type="text" inputmode="numeric" placeholder="01" maxlength="2" value="13" />
+            </div>
+
+            <div class="diary-admin-fieldset">
+              <label for="diary-file">Photo</label>
+              <input id="diary-file" name="file" type="file" accept="image/*" />
+            </div>
+          </div>
+
+          <div class="diary-admin-fieldset">
+            <label for="diary-caption">Haiku</label>
+            <textarea
+              id="diary-caption"
+              name="caption"
+              rows="6"
+              placeholder={`line one\nline two\nline three`}
+            >late bus in drizzle
+streetlights pool across the curb
+summer keeps its hush</textarea>
+          </div>
+
+          <div class="diary-admin-actions">
+            <button type="button" data-copy-json>Copy JSON entry</button>
+            <button type="button" data-copy-path>Copy image path</button>
+          </div>
+
+          <div class="diary-admin-output">
+            <p class="diary-admin-output-label">Suggested image path</p>
+            <code data-image-path>/diary/2026-07/13.jpg</code>
+          </div>
+
+          <div class="diary-admin-output">
+            <p class="diary-admin-output-label">Entry JSON</p>
+            <pre><code data-json-output></code></pre>
+          </div>
+        </form>
+
+        <section class="diary-admin-preview diary-admin-card">
+          <div class="diary-admin-preview-image" data-preview-image>
+            <span>No image selected yet</span>
+          </div>
+          <div class="diary-admin-preview-caption">
+            <span data-preview-date>July 13</span>
+            <p data-preview-caption>late bus in drizzle
+streetlights pool across the curb
+summer keeps its hush</p>
+          </div>
+        </section>
+      </div>
+
+      <section class="diary-admin-notes diary-admin-card">
+        <h2>How to use this from your phone</h2>
+        <ol class="diary-admin-steps">
+          <li>Open this page on your phone.</li>
+          <li>Pick the month, day, photo, and paste your haiku.</li>
+          <li>Copy the suggested image path and JSON entry.</li>
+          <li>Upload the image to the repo at that path, then paste the JSON into the matching month data.</li>
+        </ol>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const adminRoot = document.querySelector("[data-diary-admin]");
+
+  if (adminRoot instanceof HTMLElement) {
+    const storageKey = "photo-diary-upload";
+    const draftKey = "photo-diary-draft";
+    const password = adminRoot.dataset.diaryPassword ?? "";
+    const gate = adminRoot.querySelector("[data-diary-gate]");
+    const content = adminRoot.querySelector("[data-diary-content]");
+    const form = adminRoot.querySelector("[data-diary-form]");
+    const error = adminRoot.querySelector("[data-diary-error]");
+    const entryForm = adminRoot.querySelector("[data-entry-form]");
+    const imagePathEl = adminRoot.querySelector("[data-image-path]");
+    const jsonOutputEl = adminRoot.querySelector("[data-json-output]");
+    const previewDateEl = adminRoot.querySelector("[data-preview-date]");
+    const previewCaptionEl = adminRoot.querySelector("[data-preview-caption]");
+    const previewImageEl = adminRoot.querySelector("[data-preview-image]");
+    const copyJsonButton = adminRoot.querySelector("[data-copy-json]");
+    const copyPathButton = adminRoot.querySelector("[data-copy-path]");
+
+    const monthNameMap = {
+      january: "01",
+      february: "02",
+      march: "03",
+      april: "04",
+      may: "05",
+      june: "06",
+      july: "07",
+      august: "08",
+      september: "09",
+      october: "10",
+      november: "11",
+      december: "12"
+    };
+
+    const unlock = () => {
+      if (gate instanceof HTMLElement) gate.hidden = true;
+      if (content instanceof HTMLElement) content.hidden = false;
+      localStorage.setItem(storageKey, "open");
+    };
+
+    const lock = () => {
+      if (gate instanceof HTMLElement) gate.hidden = false;
+      if (content instanceof HTMLElement) content.hidden = true;
+    };
+
+    if (localStorage.getItem(storageKey) === "open") {
+      unlock();
+    } else {
+      lock();
+    }
+
+    if (form instanceof HTMLFormElement) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const submitted = String(formData.get("password") ?? "").trim();
+
+        if (submitted === password) {
+          if (error instanceof HTMLElement) error.hidden = true;
+          form.reset();
+          unlock();
+        } else if (error instanceof HTMLElement) {
+          error.hidden = false;
+        }
+      });
+    }
+
+    if (entryForm instanceof HTMLFormElement) {
+      const monthInput = entryForm.elements.namedItem("month");
+      const dayInput = entryForm.elements.namedItem("day");
+      const captionInput = entryForm.elements.namedItem("caption");
+      const fileInput = entryForm.elements.namedItem("file");
+
+      if (
+        monthInput instanceof HTMLSelectElement &&
+        dayInput instanceof HTMLInputElement &&
+        captionInput instanceof HTMLTextAreaElement &&
+        fileInput instanceof HTMLInputElement
+      ) {
+        const readDraft = () => {
+          const raw = localStorage.getItem(draftKey);
+          if (!raw) return null;
+
+          try {
+            return JSON.parse(raw);
+          } catch {
+            return null;
+          }
+        };
+
+        const writeDraft = () => {
+          localStorage.setItem(
+            draftKey,
+            JSON.stringify({
+              month: monthInput.value,
+              day: dayInput.value,
+              caption: captionInput.value
+            })
+          );
+        };
+
+        const draft = readDraft();
+        if (draft) {
+          monthInput.value = draft.month ?? monthInput.value;
+          dayInput.value = draft.day ?? dayInput.value;
+          captionInput.value = draft.caption ?? captionInput.value;
+        }
+
+        const makeImagePath = () => {
+          const [year, monthName] = monthInput.value.split("-");
+          const monthNumber = monthNameMap[monthName] ?? "01";
+          const day = dayInput.value.padStart(2, "0");
+          return `/diary/${year}-${monthNumber}/${day}.jpg`;
+        };
+
+        const makeJson = () => {
+          const day = dayInput.value.padStart(2, "0");
+          const caption = captionInput.value.trim();
+          return `{\n  "day": "${day}",\n  "image": "${makeImagePath()}",\n  "caption": ${JSON.stringify(caption)}\n}`;
+        };
+
+        const updatePreview = () => {
+          const [year, monthName] = monthInput.value.split("-");
+          const day = dayInput.value.padStart(2, "0");
+          const monthLabel = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+
+          if (imagePathEl instanceof HTMLElement) {
+            imagePathEl.textContent = makeImagePath();
+          }
+
+          if (jsonOutputEl instanceof HTMLElement) {
+            jsonOutputEl.textContent = makeJson();
+          }
+
+          if (previewDateEl instanceof HTMLElement) {
+            previewDateEl.textContent = `${monthLabel} ${day}, ${year}`;
+          }
+
+          if (previewCaptionEl instanceof HTMLElement) {
+            previewCaptionEl.textContent = captionInput.value.trim() || "Add your haiku here.";
+          }
+
+          writeDraft();
+        };
+
+        const renderFilePreview = () => {
+          const file = fileInput.files?.[0];
+          if (!file || !(previewImageEl instanceof HTMLElement)) return;
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            previewImageEl.innerHTML = "";
+            const img = document.createElement("img");
+            img.src = String(reader.result);
+            img.alt = "Diary preview";
+            previewImageEl.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        };
+
+        [monthInput, dayInput, captionInput].forEach((element) => {
+          element.addEventListener("input", updatePreview);
+          element.addEventListener("change", updatePreview);
+        });
+
+        fileInput.addEventListener("change", renderFilePreview);
+
+        const copyText = async (text) => {
+          await navigator.clipboard.writeText(text);
+        };
+
+        if (copyJsonButton instanceof HTMLButtonElement) {
+          copyJsonButton.addEventListener("click", async () => {
+            await copyText(makeJson());
+            copyJsonButton.textContent = "Copied";
+            setTimeout(() => {
+              copyJsonButton.textContent = "Copy JSON entry";
+            }, 1200);
+          });
+        }
+
+        if (copyPathButton instanceof HTMLButtonElement) {
+          copyPathButton.addEventListener("click", async () => {
+            await copyText(makeImagePath());
+            copyPathButton.textContent = "Copied";
+            setTimeout(() => {
+              copyPathButton.textContent = "Copy image path";
+            }, 1200);
+          });
+        }
+
+        updatePreview();
+      }
+    }
+  }
+</script>

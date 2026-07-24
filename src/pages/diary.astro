@@ -1,0 +1,227 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { diaryMonths } from "../data/photoDiary";
+
+const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout
+  title="Photo Diary | Ollie Olby"
+  description="A private monthly photo diary."
+>
+  <section class="section-intro container diary-intro">
+    <h1>Photo diary</h1>
+    <p class="lede">
+      A private monthly photo journal.
+    </p>
+  </section>
+
+  <section class="container diary-shell" data-diary-root data-diary-password="fuji">
+    <div class="diary-gate" data-diary-gate>
+      <div class="diary-gate-card">
+        <p class="diary-gate-kicker">Private</p>
+        <h2>Photo diary</h2>
+        <p>Enter the password to open the archive.</p>
+        <form class="diary-gate-form" data-diary-form>
+          <label class="sr-only" for="diary-password">Password</label>
+          <input id="diary-password" name="password" type="password" autocomplete="current-password" placeholder="Password" />
+          <button type="submit">Enter</button>
+        </form>
+        <p class="diary-gate-error" data-diary-error hidden>That password did not work.</p>
+      </div>
+    </div>
+
+    <div class="diary-content" data-diary-content hidden>
+      <div class="diary-months">
+        {diaryMonths.map((month, monthIndex) => (
+          <article class="diary-month-card" data-month-card>
+            <button
+              type="button"
+              class="diary-month-cover"
+              data-open-month
+              data-month-index={monthIndex}
+              style={`--cover-a:${month.coverPalette[0]}; --cover-b:${month.coverPalette[1]}; --cover-c:${month.coverPalette[2]};`}
+            >
+              <span class="diary-month-mosaic" aria-hidden="true">
+                {month.entries.map((entry) => (
+                  <span
+                    class="diary-month-mosaic-tile"
+                    style={`--photo-a:${entry.palette[0]}; --photo-b:${entry.palette[1]}; --photo-c:${entry.palette[2]};`}
+                  ></span>
+                ))}
+              </span>
+              <span class="diary-month-overlay"></span>
+              <span class="diary-month-text">
+                <span class="diary-month-title">{month.month}</span>
+                <span class="diary-month-year">{month.year}</span>
+              </span>
+            </button>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <dialog class="diary-dialog" data-diary-dialog>
+    <div class="diary-dialog-inner">
+      <button type="button" class="diary-dialog-close" data-close-dialog aria-label="Close carousel">Close</button>
+      {diaryMonths.map((month, monthIndex) => (
+        <section class="diary-carousel" data-carousel hidden={monthIndex !== 0}>
+          <header class="diary-carousel-header">
+            <div>
+              <p class="diary-carousel-kicker">{month.month} {month.year}</p>
+              <h2>{month.month}</h2>
+            </div>
+            <p class="diary-carousel-count" data-carousel-count></p>
+          </header>
+
+          <div class="diary-carousel-stage">
+            {month.entries.map((entry, entryIndex) => (
+              <figure class="diary-slide" data-slide hidden={entryIndex !== 0}>
+                <div
+                  class="diary-slide-image"
+                  style={`--photo-a:${entry.palette[0]}; --photo-b:${entry.palette[1]}; --photo-c:${entry.palette[2]};`}
+                ></div>
+                <figcaption>
+                  <span>{month.month} {entry.day}</span>
+                  <p>{entry.caption}</p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+
+          <div class="diary-carousel-controls">
+            <button type="button" data-prev-slide>Previous</button>
+            <button type="button" data-next-slide>Next</button>
+          </div>
+        </section>
+      ))}
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script>
+  const root = document.querySelector("[data-diary-root]");
+  const dialog = document.querySelector("[data-diary-dialog]");
+
+  if (
+    root instanceof HTMLElement &&
+    dialog instanceof HTMLDialogElement
+  ) {
+    const storageKey = "photo-diary-fuji";
+    const password = root.dataset.diaryPassword ?? "";
+    const gate = root.querySelector("[data-diary-gate]");
+    const content = root.querySelector("[data-diary-content]");
+    const form = root.querySelector("[data-diary-form]");
+    const error = root.querySelector("[data-diary-error]");
+    const carousels = Array.from(dialog.querySelectorAll("[data-carousel]"));
+    let currentMonthIndex = 0;
+    let currentSlideIndex = 0;
+
+    const unlock = () => {
+      if (gate instanceof HTMLElement) gate.hidden = true;
+      if (content instanceof HTMLElement) content.hidden = false;
+      localStorage.setItem(storageKey, "open");
+    };
+
+    const lock = () => {
+      if (gate instanceof HTMLElement) gate.hidden = false;
+      if (content instanceof HTMLElement) content.hidden = true;
+    };
+
+    if (localStorage.getItem(storageKey) === "open") {
+      unlock();
+    } else {
+      lock();
+    }
+
+    if (form instanceof HTMLFormElement) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const submitted = String(formData.get("password") ?? "");
+
+        if (submitted === password) {
+          if (error instanceof HTMLElement) error.hidden = true;
+          form.reset();
+          unlock();
+        } else if (error instanceof HTMLElement) {
+          error.hidden = false;
+        }
+      });
+    }
+
+    const updateCarousel = () => {
+      carousels.forEach((carousel, monthIndex) => {
+        const isActiveCarousel = monthIndex === currentMonthIndex;
+        carousel.hidden = !isActiveCarousel;
+
+        if (!isActiveCarousel) return;
+
+        const slides = Array.from(carousel.querySelectorAll("[data-slide]"));
+        slides.forEach((slide, slideIndex) => {
+          slide.hidden = slideIndex !== currentSlideIndex;
+        });
+
+        const count = carousel.querySelector("[data-carousel-count]");
+        if (count instanceof HTMLElement) {
+          count.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+        }
+      });
+    };
+
+    const openMonth = (monthIndex, slideIndex = 0) => {
+      currentMonthIndex = monthIndex;
+      currentSlideIndex = slideIndex;
+      updateCarousel();
+      dialog.showModal();
+    };
+
+    root.querySelectorAll("[data-open-month]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const element = button;
+        if (!(element instanceof HTMLElement)) return;
+        const monthIndex = Number(element.dataset.monthIndex ?? 0);
+        const slideIndex = Number(element.dataset.slideIndex ?? 0);
+        openMonth(monthIndex, slideIndex);
+      });
+    });
+
+    dialog.querySelectorAll("[data-close-dialog]").forEach((button) => {
+      button.addEventListener("click", () => dialog.close());
+    });
+
+    dialog.querySelectorAll("[data-prev-slide]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const activeCarousel = carousels[currentMonthIndex];
+        const slideCount = activeCarousel?.querySelectorAll("[data-slide]").length ?? 0;
+        currentSlideIndex = (currentSlideIndex - 1 + slideCount) % slideCount;
+        updateCarousel();
+      });
+    });
+
+    dialog.querySelectorAll("[data-next-slide]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const activeCarousel = carousels[currentMonthIndex];
+        const slideCount = activeCarousel?.querySelectorAll("[data-slide]").length ?? 0;
+        currentSlideIndex = (currentSlideIndex + 1) % slideCount;
+        updateCarousel();
+      });
+    });
+
+    dialog.addEventListener("click", (event) => {
+      const bounds = dialog.getBoundingClientRect();
+      const clickedBackdrop =
+        event.clientX < bounds.left ||
+        event.clientX > bounds.right ||
+        event.clientY < bounds.top ||
+        event.clientY > bounds.bottom;
+
+      if (clickedBackdrop) {
+        dialog.close();
+      }
+    });
+
+    updateCarousel();
+  }
+</script>

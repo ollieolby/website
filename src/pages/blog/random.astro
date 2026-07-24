@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout title="Random | Ollie Olby" description="Random posts, notes, and experiments by Ollie Olby.">
+  <section class="section-intro container">
+    <h1>Random</h1>
+    <p class="lede">
+      I get bored from time to time
+    </p>
+  </section>
+
+  <section class="container listing">
+    {posts.map((post) => {
+      const formattedDate = post.data.date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+      return (
+        <a class="listing-card" href={`${base}/blog/${post.id}/`}>
+          <div class="listing-topline">
+            <time class="listing-meta" datetime={post.data.date.toISOString()}>{formattedDate}</time>
+            <span class="listing-meta">{post.data.author}</span>
+          </div>
+          <h2>{post.data.title}</h2>
+          <p>{post.data.description}</p>
+        </a>
+      );
+    })}
+  </section>
+</BaseLayout>

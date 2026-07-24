@@ -1,40 +1,40 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
-
-const posts = (await getCollection("blog")).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
-);
 
 const base = import.meta.env.BASE_URL === "/" ? "" : import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
-<BaseLayout title="Blog | Ollie Olby" description="Blog posts and project notes by Ollie Olby.">
+<BaseLayout title="Blog | Ollie Olby" description="Blog categories and project notes by Ollie Olby.">
   <section class="section-intro container">
     <h1>Writing</h1>
     <p class="lede">
-      Notes on design, code, and the small systems I build for myself.
+      How I leverage linear algebra to solve simple problems.
     </p>
   </section>
 
-  <section class="container listing">
-    {posts.map((post) => {
-      const formattedDate = post.data.date.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      });
+  <section class="container blog-category-grid">
+    <a class="blog-category-card" href={`${base}/blog/random/`}>
+      <p class="blog-category-kicker">Blog</p>
+      <h2>Random</h2>
+      <p>I get bored from time to time</p>
+    </a>
 
-      return (
-        <a class="listing-card" href={`${base}/blog/${post.id}/`}>
-          <div class="listing-topline">
-            <time class="listing-meta" datetime={post.data.date.toISOString()}>{formattedDate}</time>
-            <span class="listing-meta">{post.data.author}</span>
-          </div>
-          <h2>{post.data.title}</h2>
-          <p>{post.data.description}</p>
-        </a>
-      );
-    })}
+    <a class="blog-category-card" href={`${base}/blog/my-second-rodeo/`}>
+      <p class="blog-category-kicker">Blog</p>
+      <h2>My second rodeo</h2>
+      <p>Just because it's my second rodeo does not mean I know what I am doing</p>
+    </a>
+
+    <a class="blog-category-card" href={`${base}/blog/design/`}>
+      <p class="blog-category-kicker">Blog</p>
+      <h2>Design</h2>
+      <p>Albert Einstein: "Everything should be made as simple as possible, but not simpler."</p>
+    </a>
+
+    <a class="blog-category-card" href={`${base}/diary/`}>
+      <p class="blog-category-kicker">Private</p>
+      <h2>Photo diary</h2>
+      <p>One photo a day, grouped by month, behind a password.</p>
+    </a>
   </section>
 </BaseLayout>
