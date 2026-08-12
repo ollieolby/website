@@ -6,7 +6,10 @@ Live site: [https://ollieolby.github.io/website/](https://ollieolby.github.io/we
 
 Apps directory: [https://ollieolby.github.io/website/apps/](https://ollieolby.github.io/website/apps/)
 
-Current linked app: [https://ollieolby.github.io/anagnost-ui/](https://ollieolby.github.io/anagnost-ui/)
+Current linked apps:
+
+- [https://chat.ollieolby.co.uk/](https://chat.ollieolby.co.uk/)
+- [https://ollieolby.github.io/anagnost-ui/](https://ollieolby.github.io/anagnost-ui/)
 
 This repo is the main website only. It handles:
 
